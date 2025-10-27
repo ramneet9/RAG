@@ -1,4 +1,4 @@
-# RAG Application Configuration - API-Based (Trial Friendly)
+# RAG Application Configuration - Perplexity + Sentence-Transformers
 
 # PDF Sources
 PDF_URLS = [
@@ -9,27 +9,15 @@ PDF_URLS = [
     "https://arxiv.org/pdf/1910.10683.pdf"   # T5
 ]
 
-# API Configuration - Choose your preferred provider
-API_PROVIDER = "openai"  # Options: "openai", "anthropic", "huggingface", "cohere"
+# Embedding (retrieval) provider
+EMBEDDER_PROVIDER = "sentence_transformers"
+EMBEDDER_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
-# OpenAI Configuration (Recommended for trials)
-OPENAI_API_KEY = ""  # Set your OpenAI API key here
-OPENAI_MODEL = "gpt-3.5-turbo"  # Cost-effective model
-OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"  # Cheapest embedding model
-
-# Anthropic Configuration
-ANTHROPIC_API_KEY = ""  # Set your Anthropic API key here
-ANTHROPIC_MODEL = "claude-3-haiku-20240307"  # Cheapest Claude model
-
-# Hugging Face Configuration (Free tier available)
-HUGGINGFACE_API_KEY = ""  # Set your Hugging Face API key here
-HUGGINGFACE_MODEL = "microsoft/DialoGPT-medium"
-HUGGINGFACE_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-
-# Cohere Configuration
-COHERE_API_KEY = ""  # Set your Cohere API key here
-COHERE_MODEL = "command-light"  # Cheapest Cohere model
-COHERE_EMBEDDING_MODEL = "embed-english-v3.0"
+# LLM / Chat provider
+API_PROVIDER = "perplexity"
+PERPLEXITY_API_KEY = ""  # Set your Perplexity API key here
+PERPLEXITY_MODEL = "sonar-small-chat"
+PERPLEXITY_API_BASE = "https://api.perplexity.ai"
 
 # Vector Database Configuration
 VECTOR_DB_PATH = "vector_db"

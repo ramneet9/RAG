@@ -11,7 +11,7 @@ import pickle
 import logging
 from pathlib import Path
 from config import VECTOR_DB_PATH, TOP_K_RETRIEVAL, BATCH_SIZE, USE_TRIAL_MODE
-from .api_llm_client import APILLMClient
+from .hybrid_llm_client import HybridLLMClient
 
 logger = logging.getLogger(__name__)
 
@@ -22,9 +22,9 @@ class VectorStore:
         self.db_path = Path(db_path)
         self.db_path.mkdir(exist_ok=True)
         
-        # Initialize API-based embedding client
-        logger.info("Initializing API-based embedding client")
-        self.embedding_client = APILLMClient()
+        # Initialize hybrid embedding client
+        logger.info("Initializing hybrid embedding client")
+        self.embedding_client = HybridLLMClient()
         
         # Initialize FAISS index
         self.index = None

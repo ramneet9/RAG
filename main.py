@@ -14,7 +14,7 @@ sys.path.append(str(Path(__file__).parent))
 from src.pdf_processor import PDFProcessor
 from src.text_chunker import TextChunker
 from src.vector_store import VectorStore
-from src.api_llm_client import APILLMClient
+from src.hybrid_llm_client import HybridLLMClient
 from src.conversation_manager import ConversationManager
 from src.evaluator import RAGEvaluator
 from config import PDF_URLS, EVALUATION_QUESTIONS
@@ -43,7 +43,7 @@ def main():
         pdf_processor = PDFProcessor()
         text_chunker = TextChunker()
         vector_store = VectorStore()
-        llm_client = APILLMClient()
+        llm_client = HybridLLMClient()
         conversation_manager = ConversationManager(llm_client, vector_store)
         evaluator = RAGEvaluator(conversation_manager)
         

@@ -14,7 +14,7 @@ sys.path.append(str(Path(__file__).parent / "src"))
 from src.pdf_processor import PDFProcessor
 from src.text_chunker import TextChunker
 from src.vector_store import VectorStore
-from src.api_llm_client import APILLMClient
+from src.hybrid_llm_client import HybridLLMClient
 from src.conversation_manager import ConversationManager
 from src.evaluator import RAGEvaluator
 from config import PDF_URLS, EVALUATION_QUESTIONS
@@ -102,7 +102,7 @@ def test_llm_client():
     print("🧪 Testing LLM Client...")
     
     try:
-        llm_client = APILLMClient()
+        llm_client = HybridLLMClient()
         print("✅ LLM client initialized successfully")
         
         # Test response generation

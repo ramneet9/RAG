@@ -8,14 +8,14 @@ from typing import List, Dict, Optional
 import logging
 from config import MAX_MEMORY_TURNS
 from .vector_store import VectorStore
-from .api_llm_client import APILLMClient
+from .hybrid_llm_client import HybridLLMClient
 
 logger = logging.getLogger(__name__)
 
 class ConversationManager:
     """Manages conversation state and coordinates RAG operations."""
     
-    def __init__(self, llm_client: APILLMClient, vector_store: VectorStore):
+    def __init__(self, llm_client: HybridLLMClient, vector_store: VectorStore):
         self.llm_client = llm_client
         self.vector_store = vector_store
         self.conversation_history: List[Dict[str, str]] = []

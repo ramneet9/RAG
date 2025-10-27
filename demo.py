@@ -14,7 +14,7 @@ sys.path.append(str(Path(__file__).parent / "src"))
 from src.pdf_processor import PDFProcessor
 from src.text_chunker import TextChunker
 from src.vector_store import VectorStore
-from src.api_llm_client import APILLMClient
+from src.hybrid_llm_client import HybridLLMClient
 from src.conversation_manager import ConversationManager
 from config import PDF_URLS
 
@@ -29,7 +29,7 @@ def setup_rag_system():
     pdf_processor = PDFProcessor()
     text_chunker = TextChunker()
     vector_store = VectorStore()
-    llm_client = APILLMClient()
+    llm_client = HybridLLMClient()
     conversation_manager = ConversationManager(llm_client, vector_store)
     
     # Check if vector database already exists
