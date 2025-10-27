@@ -22,6 +22,17 @@ pip install -r requirements.txt
 ```
 
 ### 3. Configure API Key
+
+**Option A: Using Environment Variables (Recommended)**
+```bash
+# Copy the example file
+copy env_example.txt .env
+
+# Edit .env and add your API key
+# PERPLEXITY_API_KEY=your_actual_api_key_here
+```
+
+**Option B: Using Setup Script**
 ```bash
 python setup_perplexity.py
 ```
@@ -75,18 +86,26 @@ python test.py
 
 ## Configuration
 
-Edit `config.py` to customize:
+### Environment Variables (Recommended)
+Create a `.env` file with your API key:
+```bash
+PERPLEXITY_API_KEY=your_actual_api_key_here
+```
+
+### Direct Configuration
+Edit `config.py` to customize other settings:
 
 ```python
 # LLM / Chat provider
 API_PROVIDER = "perplexity"
-PERPLEXITY_API_KEY = "your_api_key_here"
-PERPLEXITY_MODEL = "sonar-small-chat"
+PERPLEXITY_MODEL = "llama-3.1-sonar-small-128k-online"
 
 # Embedding (retrieval) provider
 EMBEDDER_PROVIDER = "sentence_transformers"
 EMBEDDER_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 ```
+
+**Note**: API keys are now loaded from environment variables for security.
 
 ## Features
 

@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 def test_pdf_processor():
     """Test PDF processing functionality."""
-    print("🧪 Testing PDF Processor...")
+    print("Testing PDF Processor...")
     
     processor = PDFProcessor()
     
@@ -33,77 +33,77 @@ def test_pdf_processor():
     downloaded_files = processor.download_pdfs(test_urls)
     
     if downloaded_files:
-        print(f"✅ Downloaded {len(downloaded_files)} PDF(s)")
+        print(f"SUCCESS: Downloaded {len(downloaded_files)} PDF(s)")
         
         # Test text extraction
         texts = processor.extract_texts()
         if texts:
-            print(f"✅ Extracted text from {len(texts)} PDF(s)")
+            print(f"SUCCESS: Extracted text from {len(texts)} PDF(s)")
             print(f"   Sample text length: {len(texts[0]['text'])} characters")
             return texts
         else:
-            print("❌ Failed to extract text")
+            print("ERROR: Failed to extract text")
             return None
     else:
-        print("❌ Failed to download PDFs")
+        print("ERROR: Failed to download PDFs")
         return None
 
 def test_text_chunker(texts):
     """Test text chunking functionality."""
-    print("🧪 Testing Text Chunker...")
+    print("Testing Text Chunker...")
     
     if not texts:
-        print("❌ No texts to chunk")
+        print("ERROR: No texts to chunk")
         return None
     
     chunker = TextChunker()
     chunks = chunker.chunk_texts(texts)
     
     if chunks:
-        print(f"✅ Created {len(chunks)} chunks")
+        print(f"SUCCESS: Created {len(chunks)} chunks")
         print(f"   Sample chunk length: {len(chunks[0]['text'])} characters")
         return chunks
     else:
-        print("❌ Failed to create chunks")
+        print("ERROR: Failed to create chunks")
         return None
 
 def test_vector_store(chunks):
     """Test vector store functionality."""
-    print("🧪 Testing Vector Store...")
+    print("Testing Vector Store...")
     
     if not chunks:
-        print("❌ No chunks to process")
+        print("ERROR: No chunks to process")
         return None
     
     vector_store = VectorStore()
     
     try:
         vector_store.create_index(chunks)
-        print("✅ Vector index created successfully")
+        print("SUCCESS: Vector index created successfully")
         
         # Test search
         test_query = "transformer architecture"
         results = vector_store.search(test_query, k=3)
         
         if results:
-            print(f"✅ Search returned {len(results)} results")
+            print(f"SUCCESS: Search returned {len(results)} results")
             print(f"   Top result score: {results[0]['score']:.3f}")
             return vector_store
         else:
-            print("❌ Search returned no results")
+            print("ERROR: Search returned no results")
             return None
             
     except Exception as e:
-        print(f"❌ Vector store error: {str(e)}")
+        print(f"ERROR: Vector store error: {str(e)}")
         return None
 
 def test_llm_client():
     """Test LLM client functionality."""
-    print("🧪 Testing LLM Client...")
+    print("Testing LLM Client...")
     
     try:
         llm_client = HybridLLMClient()
-        print("✅ LLM client initialized successfully")
+        print("SUCCESS: LLM client initialized successfully")
         
         # Test response generation
         test_context = "The Transformer architecture uses attention mechanisms."
@@ -112,22 +112,22 @@ def test_llm_client():
         response = llm_client.generate_response(test_context, test_query)
         
         if response and len(response) > 10:
-            print(f"✅ Generated response: {response[:100]}...")
+            print(f"SUCCESS: Generated response: {response[:100]}...")
             return llm_client
         else:
-            print("❌ Failed to generate meaningful response")
+            print("ERROR: Failed to generate meaningful response")
             return None
             
     except Exception as e:
-        print(f"❌ LLM client error: {str(e)}")
+        print(f"ERROR: LLM client error: {str(e)}")
         return None
 
 def test_conversation_manager(llm_client, vector_store):
     """Test conversation manager functionality."""
-    print("🧪 Testing Conversation Manager...")
+    print("Testing Conversation Manager...")
     
     if not llm_client or not vector_store:
-        print("❌ Missing dependencies")
+        print("ERROR: Missing dependencies")
         return None
     
     try:
@@ -138,23 +138,23 @@ def test_conversation_manager(llm_client, vector_store):
         result = conversation_manager.generate_response(test_query)
         
         if result and "response" in result:
-            print(f"✅ Generated response: {result['response'][:100]}...")
+            print(f"SUCCESS: Generated response: {result['response'][:100]}...")
             print(f"   Conversation turns: {result['conversation_turns']}")
             return conversation_manager
         else:
-            print("❌ Failed to generate response")
+            print("ERROR: Failed to generate response")
             return None
             
     except Exception as e:
-        print(f"❌ Conversation manager error: {str(e)}")
+        print(f"ERROR: Conversation manager error: {str(e)}")
         return None
 
 def test_evaluator(conversation_manager):
     """Test evaluator functionality."""
-    print("🧪 Testing Evaluator...")
+    print("Testing Evaluator...")
     
     if not conversation_manager:
-        print("❌ Missing conversation manager")
+        print("ERROR: Missing conversation manager")
         return None
     
     try:
@@ -165,22 +165,22 @@ def test_evaluator(conversation_manager):
         result = evaluator.evaluate_single_question(test_question)
         
         if result and "metrics" in result:
-            print("✅ Evaluation completed successfully")
+            print("SUCCESS: Evaluation completed successfully")
             print(f"   Overall score: {result['metrics']['overall_score']:.3f}")
             print(f"   Relevance: {result['metrics']['relevance']:.3f}")
             print(f"   Accuracy: {result['metrics']['accuracy']:.3f}")
             return evaluator
         else:
-            print("❌ Evaluation failed")
+            print("ERROR: Evaluation failed")
             return None
             
     except Exception as e:
-        print(f"❌ Evaluator error: {str(e)}")
+        print(f"ERROR: Evaluator error: {str(e)}")
         return None
 
 def main():
     """Run all tests."""
-    print("🚀 Starting RAG Application Tests...")
+    print("Starting RAG Application Tests...")
     
     # Test individual components
     texts = test_pdf_processor()
@@ -191,7 +191,7 @@ def main():
     evaluator = test_evaluator(conversation_manager)
     
     # Summary
-    print("\n📊 Test Summary:")
+    print("\nTest Summary:")
     components = [
         ("PDF Processor", texts is not None),
         ("Text Chunker", chunks is not None),
@@ -205,15 +205,15 @@ def main():
     total = len(components)
     
     for component, status in components:
-        status_icon = "✅" if status else "❌"
+        status_icon = "SUCCESS" if status else "ERROR"
         print(f"   {status_icon} {component}")
     
-    print(f"\n🎯 Overall: {passed}/{total} components passed")
+    print(f"\nOverall: {passed}/{total} components passed")
     
     if passed == total:
-        print("🎉 All tests passed! The RAG application is ready to use.")
+        print("SUCCESS: All tests passed! The RAG application is ready to use.")
     else:
-        print("⚠️ Some tests failed. Please check the error messages above.")
+        print("WARNING: Some tests failed. Please check the error messages above.")
 
 if __name__ == "__main__":
     main()

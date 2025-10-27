@@ -1,0 +1,5 @@
+# Environment Variables for RAG Application
+# Copy this file to .env and add your actual API keys
+
+# Perplexity API Configuration
+PERPLEXITY_API_KEY=your_perplexity_api_key_here

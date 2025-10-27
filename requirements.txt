@@ -1,34 +1,37 @@
 # Hybrid RAG Stack Dependencies (Perplexity + Sentence-Transformers)
 
 # Core dependencies
-torch>=2.0.0
-transformers>=4.30.0
-sentence-transformers>=2.2.2
-faiss-cpu>=1.7.4
+torch
+transformers
+sentence-transformers
+faiss-cpu
 
 # PDF processing
-PyPDF2>=3.0.1
-pdfminer.six>=20221105
-pymupdf>=1.23.0
+PyPDF2
+pdfminer.six
+pymupdf
 
 # Data processing
-pandas>=2.0.0
-numpy>=1.24.0
-tqdm>=4.65.0
+pandas
+numpy
+tqdm
 
 # Evaluation frameworks
-ragas>=0.0.20
-trulens>=0.8.0
+ragas
+trulens
 
 # Web scraping for PDFs
-requests>=2.31.0
-beautifulsoup4>=4.12.0
+requests
+beautifulsoup4
 
 # Report generation
-matplotlib>=3.7.0
-seaborn>=0.12.0
-reportlab>=4.0.0
+matplotlib
+seaborn
+reportlab
+
+# Perplexity API
+perplexityai
 
 # Utilities
-python-dotenv>=1.0.0
-pydantic>=2.0.0
+python-dotenv
+pydantic

@@ -1,77 +1,20 @@
 """
-Perplexity API Setup Script
+Perplexity API Validation and Testing Script
 
-This script helps users configure Perplexity API for the RAG application.
+This script validates and tests Perplexity API configuration for the RAG application.
 """
 
 import os
 import sys
 from pathlib import Path
 
-def setup_perplexity():
-    """Setup Perplexity API configuration."""
-    print("🔮 Perplexity API Setup for RAG Application")
-    print("=" * 45)
-    
-    print("📋 Perplexity API Setup Steps:")
-    print("1. Visit: https://www.perplexity.ai/settings/api")
-    print("2. Sign up or log in to your account")
-    print("3. Generate an API key")
-    print("4. Copy the API key")
-    print()
-    
-    api_key = input("Enter your Perplexity API key: ").strip()
-    
-    if not api_key:
-        print("❌ API key is required!")
-        return False
-    
-    # Update config
-    update_config({
-        "PERPLEXITY_API_KEY": api_key,
-        "API_PROVIDER": "perplexity",
-        "PERPLEXITY_MODEL": "sonar-small-chat",
-        "PERPLEXITY_API_BASE": "https://api.perplexity.ai"
-    })
-    
-    print("✅ Perplexity configuration saved!")
-    return True
-
-def update_config(updates):
-    """Update config.py with new values."""
-    config_path = Path("config.py")
-    
-    if not config_path.exists():
-        print("❌ config.py not found!")
-        return
-    
-    # Read current config
-    with open(config_path, 'r') as f:
-        content = f.read()
-    
-    # Update values
-    for key, value in updates.items():
-        # Find the line and update it
-        lines = content.split('\n')
-        for i, line in enumerate(lines):
-            if line.startswith(f"{key} ="):
-                lines[i] = f'{key} = "{value}"'
-                break
-        content = '\n'.join(lines)
-    
-    # Write updated config
-    with open(config_path, 'w') as f:
-        f.write(content)
-    
-    print(f"✅ Updated {len(updates)} configuration values")
-
 def check_perplexity_key():
     """Check if Perplexity API key is configured."""
-    print("🔍 Checking Perplexity API key configuration...")
+    print("Checking Perplexity API key configuration...")
     
     config_path = Path("config.py")
     if not config_path.exists():
-        print("❌ config.py not found!")
+        print("ERROR: config.py not found!")
         return False
     
     with open(config_path, 'r') as f:
@@ -79,16 +22,17 @@ def check_perplexity_key():
     
     # Check for empty API key
     if 'PERPLEXITY_API_KEY = ""' in content:
-        print("⚠️ Perplexity API key not configured")
-        print("Run this script to configure API key.")
+        print("WARNING: Perplexity API key not configured")
+        print("Please add your API key to config.py:")
+        print('PERPLEXITY_API_KEY = "your_api_key_here"')
         return False
     else:
-        print("✅ Perplexity API key appears to be configured!")
+        print("SUCCESS: Perplexity API key appears to be configured!")
         return True
 
 def test_perplexity_connection():
     """Test Perplexity API connection."""
-    print("🧪 Testing Perplexity API connection...")
+    print("Testing Perplexity API connection...")
     
     try:
         from src.hybrid_llm_client import HybridLLMClient
@@ -96,24 +40,151 @@ def test_perplexity_connection():
         client = HybridLLMClient()
         
         if client.test_connection():
-            print("✅ Perplexity API connection successful!")
+            print("SUCCESS: Perplexity API connection successful!")
             return True
         else:
-            print("❌ Perplexity API connection failed")
+            print("ERROR: Perplexity API connection failed")
+            print("This could be due to:")
+            print("- Invalid API key")
+            print("- Network connectivity issues")
+            print("- Perplexity API service issues")
+            print("- Rate limiting")
             return False
             
     except Exception as e:
-        print(f"❌ Connection test error: {str(e)}")
+        print(f"ERROR: Connection test error: {str(e)}")
+        print("This could be due to:")
+        print("- Missing API key")
+        print("- Invalid API key format")
+        print("- Network connectivity issues")
+        print("- Missing dependencies")
         return False
 
+def test_embedding_model():
+    """Test sentence-transformers embedding model."""
+    print("Testing sentence-transformers embedding model...")
+    
+    try:
+        from sentence_transformers import SentenceTransformer
+        from config import EMBEDDER_MODEL
+        
+        print(f"Loading model: {EMBEDDER_MODEL}")
+        model = SentenceTransformer(EMBEDDER_MODEL)
+        
+        # Test embedding generation
+        test_texts = ["This is a test sentence.", "Another test sentence."]
+        embeddings = model.encode(test_texts)
+        
+        print(f"SUCCESS: Embedding model loaded successfully!")
+        print(f"SUCCESS: Generated {len(embeddings)} embeddings with dimension {embeddings.shape[1]}")
+        return True
+        
+    except Exception as e:
+        print(f"ERROR: Embedding model test error: {str(e)}")
+        return False
+
+def test_full_system():
+    """Test the complete RAG system."""
+    print("Testing complete RAG system...")
+    
+    try:
+        from src.hybrid_llm_client import HybridLLMClient
+        from src.vector_store import VectorStore
+        
+        # Test LLM client
+        print("Testing LLM client...")
+        llm_client = HybridLLMClient()
+        
+        # Test vector store
+        print("Testing vector store...")
+        vector_store = VectorStore()
+        
+        # Test embedding generation
+        print("Testing embedding generation...")
+        test_texts = ["Test document content for embedding."]
+        embeddings = llm_client.generate_embeddings(test_texts)
+        
+        print("SUCCESS: Complete RAG system test successful!")
+        return True
+        
+    except Exception as e:
+        print(f"ERROR: Full system test error: {str(e)}")
+        return False
+
+def show_configuration():
+    """Show current configuration."""
+    print("Current Configuration:")
+    print("=" * 30)
+    
+    try:
+        from config import (
+            API_PROVIDER, PERPLEXITY_MODEL, PERPLEXITY_API_BASE,
+            EMBEDDER_PROVIDER, EMBEDDER_MODEL,
+            CHUNK_SIZE, CHUNK_OVERLAP, TOP_K_RETRIEVAL
+        )
+        
+        print(f"API Provider: {API_PROVIDER}")
+        print(f"Perplexity Model: {PERPLEXITY_MODEL}")
+        print(f"API Base URL: {PERPLEXITY_API_BASE}")
+        print(f"Embedding Provider: {EMBEDDER_PROVIDER}")
+        print(f"Embedding Model: {EMBEDDER_MODEL}")
+        print(f"Chunk Size: {CHUNK_SIZE}")
+        print(f"Chunk Overlap: {CHUNK_OVERLAP}")
+        print(f"Top K Retrieval: {TOP_K_RETRIEVAL}")
+        
+    except Exception as e:
+        print(f"ERROR: Error reading configuration: {str(e)}")
+
 def main():
-    """Main setup function."""
-    if len(sys.argv) > 1 and sys.argv[1] == "check":
-        check_perplexity_key()
-    elif len(sys.argv) > 1 and sys.argv[1] == "test":
-        test_perplexity_connection()
+    """Main validation and testing function."""
+    if len(sys.argv) > 1:
+        command = sys.argv[1].lower()
+        
+        if command == "check":
+            check_perplexity_key()
+        elif command == "test":
+            test_perplexity_connection()
+        elif command == "embedding":
+            test_embedding_model()
+        elif command == "full":
+            test_full_system()
+        elif command == "config":
+            show_configuration()
+        else:
+            print("ERROR: Unknown command. Available commands:")
+            print("  check     - Check API key configuration")
+            print("  test      - Test Perplexity API connection")
+            print("  embedding - Test embedding model")
+            print("  full      - Test complete RAG system")
+            print("  config    - Show current configuration")
     else:
-        setup_perplexity()
+        # Run all tests by default
+        print("Perplexity API Validation and Testing")
+        print("=" * 40)
+        
+        print("\n1. Checking configuration...")
+        config_ok = check_perplexity_key()
+        
+        if config_ok:
+            print("\n2. Testing API connection...")
+            api_ok = test_perplexity_connection()
+            
+            print("\n3. Testing embedding model...")
+            embedding_ok = test_embedding_model()
+            
+            if api_ok and embedding_ok:
+                print("\n4. Testing complete system...")
+                system_ok = test_full_system()
+                
+                if system_ok:
+                    print("\nSUCCESS: All tests passed! Your RAG system is ready to use.")
+                    print("Run: python main.py")
+                else:
+                    print("\nWARNING: System test failed. Check the errors above.")
+            else:
+                print("\nWARNING: Some tests failed. Fix the issues before running the system.")
+        else:
+            print("\nERROR: Configuration check failed. Please configure your API key first.")
 
 if __name__ == "__main__":
     main()

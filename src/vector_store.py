@@ -86,11 +86,12 @@ class VectorStore:
         dimension = embeddings.shape[1]
         self.index = faiss.IndexFlatIP(dimension)  # Inner product for cosine similarity
         
-        # Normalize embeddings for cosine similarity
+        # Convert to float32 and normalize embeddings for cosine similarity
+        embeddings = embeddings.astype('float32')
         faiss.normalize_L2(embeddings)
         
         # Add embeddings to index
-        self.index.add(embeddings.astype('float32'))
+        self.index.add(embeddings)
         
         # Store chunks and metadata
         self.chunks = chunks
@@ -163,10 +164,13 @@ class VectorStore:
         # Generate query embedding
         query_embeddings = self.embedding_client.generate_embeddings([query])
         query_embedding = np.array(query_embeddings[0]).reshape(1, -1)
+        
+        # Convert to float32 and normalize
+        query_embedding = query_embedding.astype('float32')
         faiss.normalize_L2(query_embedding)
         
         # Search
-        scores, indices = self.index.search(query_embedding.astype('float32'), k)
+        scores, indices = self.index.search(query_embedding, k)
         
         # Prepare results
         results = []

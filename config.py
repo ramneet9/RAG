@@ -1,5 +1,11 @@
 # RAG Application Configuration - Perplexity + Sentence-Transformers
 
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
 # PDF Sources
 PDF_URLS = [
     "https://arxiv.org/pdf/1706.03762.pdf",  # Attention Is All You Need
@@ -15,9 +21,13 @@ EMBEDDER_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 # LLM / Chat provider
 API_PROVIDER = "perplexity"
-PERPLEXITY_API_KEY = ""  # Set your Perplexity API key here
-PERPLEXITY_MODEL = "sonar-small-chat"
+PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY")  # Load from environment variable
+PERPLEXITY_MODEL = "llama-3.1-sonar-small-128k-online"
 PERPLEXITY_API_BASE = "https://api.perplexity.ai"
+
+# Validate API key is loaded
+if not PERPLEXITY_API_KEY:
+    raise ValueError("PERPLEXITY_API_KEY not found in environment variables. Please create a .env file with your API key.")
 
 # Vector Database Configuration
 VECTOR_DB_PATH = "vector_db"

@@ -34,12 +34,12 @@ def main():
     
     logger = logging.getLogger(__name__)
     
-    print("🚀 Starting RAG Application...")
+    print("Starting RAG Application...")
     logger.info("RAG Application started")
     
     try:
         # Initialize components
-        print("🔧 Initializing components...")
+        print("Initializing components...")
         pdf_processor = PDFProcessor()
         text_chunker = TextChunker()
         vector_store = VectorStore()
@@ -48,7 +48,7 @@ def main():
         evaluator = RAGEvaluator(conversation_manager)
         
         # Process PDFs and create vector database
-        print("📄 Processing PDFs...")
+        print("Processing PDFs...")
         logger.info("Starting PDF processing")
         pdf_processor.download_pdfs(PDF_URLS)
         texts = pdf_processor.extract_texts()
@@ -56,34 +56,34 @@ def main():
         if not texts:
             raise ValueError("No texts extracted from PDFs")
         
-        print("✂️ Chunking texts...")
+        print("Chunking texts...")
         logger.info("Starting text chunking")
         chunks = text_chunker.chunk_texts(texts)
         
         if not chunks:
             raise ValueError("No chunks created from texts")
         
-        print("🔍 Creating vector database...")
+        print("Creating vector database...")
         logger.info("Creating vector database")
         vector_store.create_index(chunks)
         
         # Run evaluation
-        print("🧪 Running evaluation...")
+        print("Running evaluation...")
         logger.info("Starting evaluation")
         results = evaluator.evaluate(EVALUATION_QUESTIONS)
         
         # Generate report
-        print("📊 Generating report...")
+        print("Generating report...")
         logger.info("Generating evaluation report")
         report_path = evaluator.generate_report(results)
         
-        print("✅ RAG Application completed successfully!")
-        print(f"📋 Report generated: {report_path}")
+        print("SUCCESS: RAG Application completed successfully!")
+        print(f"Report generated: {report_path}")
         logger.info(f"RAG Application completed successfully. Report: {report_path}")
         
     except Exception as e:
         error_msg = f"RAG Application failed: {str(e)}"
-        print(f"❌ {error_msg}")
+        print(f"ERROR: {error_msg}")
         logger.error(error_msg)
         raise
 

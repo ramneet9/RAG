@@ -11,7 +11,7 @@ A comprehensive RAG (Retrieval-Augmented Generation) application that:
 from .pdf_processor import PDFProcessor
 from .text_chunker import TextChunker
 from .vector_store import VectorStore
-from .llm_client import LLMClient
+from .hybrid_llm_client import HybridLLMClient
 from .conversation_manager import ConversationManager
 from .evaluator import RAGEvaluator
 
@@ -22,7 +22,7 @@ __all__ = [
     "PDFProcessor",
     "TextChunker", 
     "VectorStore",
-    "LLMClient",
+    "HybridLLMClient",
     "ConversationManager",
     "RAGEvaluator"
 ]
