@@ -299,6 +299,7 @@ class ReportGenerator:
         # Summary statistics
         total_questions = evaluation_data.get("evaluation_summary", {}).get("total_questions", 0)
         evaluation_date = evaluation_data.get("evaluation_summary", {}).get("evaluation_date", "")
+        overall_metrics = evaluation_data.get("evaluation_summary", {}).get("overall_metrics", {})
         
         story.append(Paragraph(f"<b>Evaluation Summary:</b> {total_questions} questions were evaluated using the custom RAG assessment framework.", self.styles['CustomBody']))
         story.append(Paragraph(f"<b>Evaluation Date:</b> {evaluation_date}", self.styles['CustomBody']))
