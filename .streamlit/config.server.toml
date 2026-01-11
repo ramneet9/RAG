@@ -1,0 +1,20 @@
+# Server Deployment Configuration (AWS EC2)
+# Copy this to config.toml for server deployment
+
+[server]
+port = 8501
+address = "0.0.0.0"  # Use 0.0.0.0 for server to listen on all interfaces
+enableCORS = false
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+primaryColor = "#1f77b4"
+backgroundColor = "#0e1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#fafafa"
+font = "sans serif"
+base = "dark"
+

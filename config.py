@@ -22,7 +22,22 @@ EMBEDDER_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 # LLM / Chat provider
 API_PROVIDER = "perplexity"
 PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY")  # Load from environment variable
-PERPLEXITY_MODEL = "llama-3.1-sonar-small-128k-online"
+# Perplexity Model Configuration
+# ⚠️ IMPORTANT: You need to find the correct model name from:
+#    https://docs.perplexity.ai/getting-started/models
+# 
+# Your API key is valid, but the model names may have changed.
+# Check your Perplexity dashboard or API documentation for current model names.
+#
+# To find the correct model:
+# 1. Visit: https://docs.perplexity.ai/getting-started/models
+# 2. Or check your Perplexity account dashboard
+# 3. Or run: python test_perplexity_models.py (after updating model list)
+#
+# Common formats to try (update based on docs):
+# - Check if your account has access to chat models
+# - Model names may be account-specific
+PERPLEXITY_MODEL = "sonar"  # ⚠️ UPDATE THIS with correct model name
 PERPLEXITY_API_BASE = "https://api.perplexity.ai"
 
 # Validate API key is loaded

@@ -147,3 +147,6 @@ paper_*.pdf
 # OS files
 .DS_Store
 Thumbs.db
+
+# Streamlit local config
+.streamlit/config.local.toml

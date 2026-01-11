@@ -1,0 +1,19 @@
+[server]
+port = 8501
+# For local development, use "localhost" or leave commented to use default
+# For AWS EC2 deployment, use "0.0.0.0" to listen on all interfaces
+address = "localhost"
+enableCORS = true
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+primaryColor = "#1f77b4"
+backgroundColor = "#0e1117"
+secondaryBackgroundColor = "#262730"
+textColor = "#fafafa"
+font = "sans serif"
+base = "dark"
+

@@ -38,11 +38,32 @@ python setup_perplexity.py
 ```
 
 ### 4. Run the Application
+
+**Option A: Streamlit Web UI (Recommended)**
+```bash
+streamlit run streamlit_app.py
+```
+Then open your browser to `http://localhost:8501`
+
+**Note:** Always use `localhost:8501` in your browser, even if the terminal shows `0.0.0.0`. The `0.0.0.0` is a server binding address, not a browser URL.
+
+**Option B: Command Line Interface**
 ```bash
 python main.py
 ```
 
 ## Usage
+
+### Streamlit Web UI (Recommended)
+```bash
+streamlit run streamlit_app.py
+```
+Features:
+- Interactive chat interface
+- PDF upload and management
+- System status monitoring
+- Real-time validation
+- AWS EC2 deployment ready
 
 ### Full Evaluation
 ```bash
@@ -78,9 +99,11 @@ python test.py
 ├── main.py                # Main application
 ├── demo.py                # Interactive demo
 ├── test.py                # Component tests
+├── streamlit_app.py       # Streamlit web UI
 ├── setup_perplexity.py    # Perplexity setup
 ├── requirements.txt       # Dependencies
 ├── README.md              # This file
+├── AWS_EC2_DEPLOYMENT.md  # AWS deployment guide
 └── PERPLEXITY_SETUP_GUIDE.md # Detailed setup guide
 ```
 
@@ -122,8 +145,20 @@ EMBEDDER_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 - **Full Evaluation**: ~$0.50-1.00
 - **Per Query**: ~$0.001
 
+## Deployment
+
+### AWS EC2 Deployment
+See `AWS_EC2_DEPLOYMENT.md` for detailed instructions on deploying to AWS EC2.
+
+Quick start:
+1. Follow the deployment guide
+2. Configure security groups (port 8501)
+3. Run `streamlit run streamlit_app.py --server.port 8501 --server.address 0.0.0.0`
+
 ## Support
 
 - **Perplexity API**: [Documentation](https://docs.perplexity.ai/)
 - **Sentence-Transformers**: [Documentation](https://www.sbert.net/)
+- **Streamlit**: [Documentation](https://docs.streamlit.io/)
 - **Setup Guide**: See `PERPLEXITY_SETUP_GUIDE.md`
+- **Deployment Guide**: See `AWS_EC2_DEPLOYMENT.md`

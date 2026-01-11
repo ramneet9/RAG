@@ -7,6 +7,8 @@ Handles integration with Perplexity API for LLM and sentence-transformers for em
 import os
 from typing import List, Dict, Optional
 import logging
+import traceback
+import requests
 from sentence_transformers import SentenceTransformer
 from perplexity import Perplexity
 from config import (
@@ -135,7 +137,83 @@ class HybridLLMClient:
             return "I apologize, but I encountered an error while generating a response. Please try again."
     
     def _generate_with_perplexity(self, prompt: str) -> str:
-        """Generate response using retrieved context (local processing)."""
+        """Generate response using Perplexity API chat completions."""
+        try:
+            if not self.perplexity_client or not self.api_key:
+                logger.warning("Perplexity client not available, using fallback")
+                return self._generate_contextual_response_fallback(prompt)
+            
+            # Use Perplexity API chat completions endpoint
+            url = f"{self.api_base}/chat/completions"
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            # Build messages for chat API
+            messages = [
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that answers questions based on the provided context. Use the context to provide accurate and detailed answers."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+            
+            payload = {
+                "model": self.model,
+                "messages": messages,
+                "max_tokens": self.max_tokens if self.trial_mode else 1000,
+                "temperature": 0.7
+            }
+            
+            logger.info(f"Making API call to Perplexity: {self.model}")
+            logger.debug(f"Prompt length: {len(prompt)} characters")
+            logger.debug(f"API URL: {url}")
+            logger.debug(f"Payload model: {payload['model']}")
+            
+            # Make API request
+            response = requests.post(url, json=payload, headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                result = response.json()
+                if 'choices' in result and len(result['choices']) > 0:
+                    api_response = result['choices'][0]['message']['content']
+                    logger.info(f"Successfully received response from Perplexity API ({len(api_response)} chars)")
+                    return self._clean_response(api_response)
+                else:
+                    logger.warning("No choices in API response, using fallback")
+                    return self._generate_contextual_response_fallback(prompt)
+            else:
+                error_data = response.json() if response.text else {}
+                error_msg = f"API request failed with status {response.status_code}"
+                if 'error' in error_data:
+                    error_detail = error_data['error']
+                    error_msg += f": {error_detail.get('message', response.text)}"
+                    # If model is invalid, suggest alternatives
+                    if 'invalid_model' in str(error_detail.get('type', '')):
+                        logger.error(f"Invalid model '{self.model}'. Please check Perplexity API documentation for valid models.")
+                else:
+                    error_msg += f": {response.text}"
+                logger.error(error_msg)
+                # Fallback to contextual response
+                return self._generate_contextual_response_fallback(prompt)
+                
+        except requests.exceptions.Timeout:
+            logger.error("API request timed out, using fallback")
+            return self._generate_contextual_response_fallback(prompt)
+        except requests.exceptions.RequestException as e:
+            logger.error(f"API request error: {str(e)}, using fallback")
+            return self._generate_contextual_response_fallback(prompt)
+        except Exception as e:
+            logger.error(f"Error generating response: {str(e)}")
+            logger.error(traceback.format_exc())
+            return self._generate_contextual_response_fallback(prompt)
+    
+    def _generate_contextual_response_fallback(self, prompt: str) -> str:
+        """Fallback response generation when API is unavailable."""
         try:
             # Extract the context and question from the prompt
             context_start = prompt.find("Context:")
@@ -144,24 +222,21 @@ class HybridLLMClient:
             if context_start != -1 and context_end != -1:
                 context = prompt[context_start:context_end].replace("Context:", "").strip()
                 question = prompt[context_end:].replace("Question:", "").strip()
-                
-                # Generate a response based on the context
-                response = self._generate_contextual_response(context, question)
-                return response
+                return self._generate_contextual_response(context, question)
             else:
-                # Fallback to Perplexity search if no context found
-                search_response = self.perplexity_client.search.create(query=prompt)
-                
-                if search_response and hasattr(search_response, 'results') and search_response.results:
-                    first_result = search_response.results[0]
-                    response = first_result.title if hasattr(first_result, 'title') else str(first_result)
-                    return self._clean_response(response)
+                # Generic fallback
+                if len(prompt) > 200:
+                    sentences = prompt.split('.')
+                    relevant_sentences = [s.strip() for s in sentences if len(s.strip()) > 20][:3]
+                    response = ". ".join(relevant_sentences)
+                    if response and not response.endswith('.'):
+                        response += "."
+                    return response
                 else:
-                    return "I apologize, but I couldn't find relevant information to answer your question."
-                
+                    return f"Based on the provided information: {prompt[:200]}..."
         except Exception as e:
-            logger.error(f"Error generating response: {str(e)}")
-            return "I apologize, but I encountered an error while generating a response. Please try again."
+            logger.error(f"Error in fallback response: {str(e)}")
+            return "I apologize, but I encountered an error while processing your request. Please try again."
     
     def _generate_contextual_response(self, context: str, question: str) -> str:
         """Generate a response based on the retrieved context."""
